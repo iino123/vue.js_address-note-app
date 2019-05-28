@@ -6,10 +6,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    login_user: null,
     drawer: false,
     addresses:[]
   },
   mutations: {
+    setLoginUser(state, user){
+      state.login_user = user
+    },
     toggleSideMenu (state){
       state.drawer = !state.drawer
     },
@@ -22,12 +26,16 @@ export default new Vuex.Store({
       const google_auth_provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithRedirect(google_auth_provider)
     },
+    setLoginUser ({commit}, user){
+      commit('setLoginUser', user)
+    },
     toggleSideMenu ({ commit }){
       commit('toggleSideMenu')
     },
     addAddress ({commit}, address){
       commit('addAddress', address)
     }
+    
 
   }
 })
