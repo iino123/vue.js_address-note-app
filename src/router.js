@@ -16,7 +16,7 @@ export default new Router({
     },
     {
       path: '/addresses',
-      name: '/addresses',
+      name: 'addresses',
       component: Addresses
     },
     {
