@@ -18,10 +18,18 @@
       <v-flex xs12 mt-5 justify-center>
         <v-data-table :headers='headers' :items='addresses'>
           <template v-slot:items="props">
+            <!-- ここのpropsがわからない -->
             <td class="text-xs-left">{{ props.item.name }}</td>
             <td class="text-xs-left">{{ props.item.tel }}</td>
             <td class="text-xs-left">{{ props.item.email }}</td>
             <td class="text-xs-left">{{ props.item.address }}</td>
+            <td class="text-xs-left">
+              <span>
+                <router-link :to="{ name: 'address_edit', params: {address_id: props.item.id }}">
+                  <v-icon small class="mr-2">edit</v-icon>
+                </router-link>
+              </span>
+            </td>
           </template>
         </v-data-table>
       </v-flex>
@@ -41,10 +49,18 @@ export default {
         { text: '名前', value: 'name' },
         { text: '電話番号', value: 'tel' },
         { text: 'メールアドレス', value: 'email' },
-        { text: '住所', value: 'address' }
+        { text: '住所', value: 'address' },
+        { text: '操作', sortable: false }
       ],
       addresses: []
     }
   }
 }
 </script>
+
+<style  scoped lang="scss">
+  // リンクの下にある線を消すため
+  a {
+    text-decoration: none;
+  }
+</style>
