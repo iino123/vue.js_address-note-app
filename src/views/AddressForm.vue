@@ -27,6 +27,17 @@
 import { mapActions } from 'vuex'
 
 export default {
+  created () {
+    if (!this.$route.params.address_id) return
+    // paramsは$routesから取得することができる　returnする場合は新規のcreateとする
+
+    const address = this.$store.getters.getAddressById(this.$route.params.address_id)
+    if (address) {
+      this.address = address
+    } else {
+      this.$router.push({ name: 'addresses' })
+    }
+  },
   data () {
     return {
       address: {}
@@ -34,16 +45,21 @@ export default {
   },
   methods:{
     submit(){
-      // storeへのデータの保存
-      this.addAddress(this.address)
-      
+      // ここのthisの実態は何か気になる
+      // storeへのデータのsave or update
+      if (this.$route.params.address_id) {
+        this.updateAddress({ id: this.$route.params.address_id, address: this.address })
+      } else {
+        this.addAddress(this.address)
+      }
+
       // ページ遷移
       this.$router.push({ name: 'addresses'})
 
       // 初期化する
       this.address = {}
     },
-    ...mapActions(['addAddress'])
+    ...mapActions(['addAddress', 'updateAddress'])
   }
 }
 </script>

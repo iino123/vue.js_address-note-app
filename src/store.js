@@ -23,7 +23,13 @@ export default new Vuex.Store({
     addAddress(state, { id, address }){
       address.id = id
       state.addresses.push(address)
+    },
+    updateAddress (state, { id, address}) {
+      const index = state.addresses.findIndex(address => address.id === id)
+
+      state.addresses[index] = address
     }
+
   },
   actions: {
     login(){
@@ -38,8 +44,7 @@ export default new Vuex.Store({
     },
     fetchAddresses ({getters, commit }) {
       firebase.firestore().collection(`users/${getters.uid}/addresses`).get().then(snapshot => {
-        snapshot.forEach(doc => commit('addAddress', { id: doc.id, adress: doc.data() }))
-        // addAddressで重複してデータが保存されないのか？
+        snapshot.forEach(doc => commit('addAddress', { id: doc.id, address: doc.data() }))
       })
     },
     deleteLoginUser({commit}, user){
@@ -54,11 +59,18 @@ export default new Vuex.Store({
           commit('addAddress', { id: doc.id, address })
         })
       }
+    },
+    updateAddress ({ getters, commit}, { id, address} ) {
+      firebase.firestore().collection(`users/${getters.uid}/addresses`).doc(id).update(address).then(() => {
+        commit('updateAddress', { id, address })
+      })
     }
   },
   getters: {
     userName: state => state.login_user ? state.login_user.displayName : '',
     photoURL: state => state.login_user ? state.login_user.photoURL : '',
-    uid: state => state.login_user ? state.login_user.uid : null
+    uid: state => state.login_user ? state.login_user.uid : null,
+    getAddressById: state => id => state.addresses.find(address => address.id === id),
+    // 関数(idを引数に受け取ってstateのaddressesからidがマッチするものを返す関数)を返す関数
   }
 })
