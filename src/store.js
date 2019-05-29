@@ -28,6 +28,13 @@ export default new Vuex.Store({
       const index = state.addresses.findIndex(address => address.id === id)
 
       state.addresses[index] = address
+    },
+    deleteAddress ( state, { id }) {
+      const index = state.addresses.findIndex(address => address.id === id)
+      // ここのaddressが指すものは何か?? 引数ではidしか受け取っていない。
+      // findIndexメソッド確認
+
+      state.addresses.splice(index, 1)
     }
 
   },
@@ -63,6 +70,11 @@ export default new Vuex.Store({
     updateAddress ({ getters, commit}, { id, address} ) {
       firebase.firestore().collection(`users/${getters.uid}/addresses`).doc(id).update(address).then(() => {
         commit('updateAddress', { id, address })
+      })
+    },
+    deleteAddress ({ getters, commit}, { id } ) {
+      firebase.firestore().collection(`users/${getters.uid}/addresses`).doc(id).delete().then(() => {
+        commit('deleteAddress', { id })
       })
     }
   },
